@@ -27,6 +27,14 @@ class PyTorch(object):
     """
 
     num_workers: int
+    min_replicas: int
+    max_replicas: int
+    rdzv_backend: str
+    # rdzv_port: int
+    # rdzv_host: str
+    # standalone: bool
+    n_proc_per_node: int
+    max_restarts: int
 
 
 class PyTorchFunctionTask(PythonFunctionTask[PyTorch]):
@@ -46,7 +54,17 @@ class PyTorchFunctionTask(PythonFunctionTask[PyTorch]):
         )
 
     def get_custom(self, settings: SerializationSettings) -> Dict[str, Any]:
-        job = PyTorchJob(workers_count=self.task_config.num_workers)
+        job = PyTorchJob(
+            workers_count=self.task_config.num_workers,
+            min_replicas=self.task_config.min_replicas,
+            max_replicas=self.task_config.max_replicas,
+            rdzv_backend=self.task_config.rdzv_backend,
+            # rdzv_port=self.task_config.rdzv_port,
+            # rdzv_host=self.task_config.rdzv_host,
+            # standalone=self.task_config.standalone,
+            n_proc_per_node=self.task_config.n_proc_per_node,
+            max_restarts=self.task_config.max_restarts,  
+        )
         return MessageToDict(job.to_flyte_idl())
 
 
